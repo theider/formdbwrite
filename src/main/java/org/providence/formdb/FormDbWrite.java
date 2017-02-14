@@ -2,16 +2,43 @@ package org.providence.formdb;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author theider
  */
 public class FormDbWrite extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(FormDbWrite.class);
+
+    private void writePerson(String lastName, String firstName) {
+        DBConnectionProvider db = new DBConnectionProvider("localhost", "3306", "formdbwrite", "test", "test");
+        Connection connection = null;
+        try {
+            connection = db.openConnection();
+            PreparedStatement prep = connection.prepareStatement("INSERT INTO people (firstName,lastName) VALUES (?,?)");
+            prep.setString(1, firstName);
+            prep.setString(2, lastName);
+            prep.executeUpdate();
+            LOGGER.debug("wrote new person record " + lastName + " " + firstName);
+        } catch (SQLException ex) {
+            LOGGER.error("failed to write to DB", ex);
+        } finally {
+            try {
+                db.closeConnection(connection);
+            } catch (SQLException ex) {
+                // ...
+            }
+        }
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -27,7 +54,7 @@ public class FormDbWrite extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
-        
+        writePerson(lastName, firstName);
         try (PrintWriter out = response.getWriter()) {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
