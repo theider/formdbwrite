@@ -37,7 +37,7 @@ public class DBConnectionProvider {
 
     public synchronized Connection openConnection() throws SQLException {
         if(!initialized) {
-            connectString = String.format("jdbc:mysql://%s:%s/%s?user=%s&password=%s&useSSL=true",
+            connectString = String.format("jdbc:mysql://%s:%s/%s?user=%s&password=%s&useSSL=false",
                     this.hostAddress,
                     this.hostPort,
                     this.databaseName,

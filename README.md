@@ -1,6 +1,13 @@
 # formdbwrite
 A simple form to MySQL table example in Java.
 
+## Components
+### Form
+```index.html```
+This is the form that lets you enter a first and last name to be submitted to the servlet to be written to the database.
+### Servlet
+```org.providence.formdb.FormDbWrite```
+This is the servlet that takes the form post and executes an INSERT statement to add the person to the database.
 ## Database
 Create the database
 ```
